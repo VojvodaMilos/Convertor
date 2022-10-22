@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import img from "./img/arrow.png";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="converter">
+      <h1>CYRRENCY CONVERTOR</h1>
+      <div className="monete">
+        <div className="left">
+          <select name="monet" className="select">
+            <option value="RSD">RSD</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+          <input type="text" className="input" />
+        </div>
+        <img src={img} alt="" className="img" />
+        <div className="right">
+          <select name="monet" className="select">
+            <option value="RSD">RSD</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+          </select>
+          <input type="text" className="input" />
+        </div>
+      </div>
+      <div className="res">
+        <button className="btn">Reset</button>
+      </div>
     </div>
   );
 }
