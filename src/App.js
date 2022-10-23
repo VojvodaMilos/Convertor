@@ -7,11 +7,12 @@ function App() {
   const [inputRight, setInputRight] = useState(null);
   const [inputLeftMoneu, setInputLeftMoneu] = useState("EUR");
   const [inputRightMoneu, setInputRightMoneu] = useState("RSD");
-  const [result, setResult] = useState(0);
   const [rsd, setRsd] = useState(null);
   const [usd, setUsd] = useState(0);
   const inp1 = useRef();
   const inp2 = useRef();
+  const sel1 = useRef();
+  const sel2 = useRef();
 
   useEffect(() => {
     const data = fetch("https://api.exchangerate.host/latest")
@@ -21,8 +22,8 @@ function App() {
         setUsd(data.rates.USD);
       });
   }, []);
-  // console.log(inputRightMoneu);
   console.log(inputLeftMoneu);
+  console.log(inputRightMoneu);
 
   return (
     <div className="converter">
@@ -30,9 +31,10 @@ function App() {
       <div className="monete">
         <div className="left">
           <select
+            ref={sel1}
             onChange={(e) => {
               setInputLeftMoneu(e.target.value);
-              console.log(e.target.value);
+              // console.log(e.target.value);
             }}
             name="monet"
             className="select"
@@ -51,31 +53,41 @@ function App() {
                 inp2.current.value = e.target.value * rsd;
               }
               if (inputLeftMoneu === "EUR" && inputRightMoneu === "USD") {
-                console.log("radi");
+                // console.log("radi");
                 setInputLeft(e.target.value * rsd);
                 inp2.current.value = e.target.value * usd;
               }
               if (inputLeftMoneu === "EUR" && inputRightMoneu === "EUR") {
                 inp2.current.value = e.target.value;
-                console.log("radi");
+                // console.log("radi");
               }
             }}
             type="number"
             className="input"
           />
         </div>
-        <img src={img} alt="" className="img" />
+        <img
+          onClick={() => {
+            // console.log(sel2.current.value);
+            setInputLeftMoneu(inp2.current.value);
+            setInputRightMoneu(inp1.current.value);
+          }}
+          src={img}
+          alt=""
+          className="img"
+        />
         <div className="right">
           <select
+            ref={sel2}
             onChange={(e) => {
               setInputRightMoneu(e.target.value);
-              console.log(e.target.value);
+              // console.log(e.target.value);
             }}
             name="monet"
             className="select"
           >
-            <option value="EUR">RSD</option>
-            <option value="RSD">EUR</option>
+            <option value="RSD">RSD</option>
+            <option value="EUR">EUR</option>
             <option value="USD">USD</option>
           </select>
           <input
@@ -88,11 +100,12 @@ function App() {
                 inp1.current.value = e.target.value / rsd;
               }
               if (inputLeftMoneu === "EUR" && inputRightMoneu === "USD") {
-                console.log("radi");
+                // console.log("radi");
                 setInputLeft(e.target.value / rsd);
                 inp1.current.value = e.target.value / usd;
               }
               if (inputLeftMoneu === "EUR" && inputRightMoneu === "EUR") {
+                console.log("radi");
                 inp1.current.value = e.target.value;
               }
             }}
