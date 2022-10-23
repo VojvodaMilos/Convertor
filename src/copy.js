@@ -6,23 +6,22 @@ function App() {
   const [USDEUR, setUSDEUR] = useState(1);
   const [USDRSD, setUSDRSD] = useState(0);
   const [inputLeft, setInputLeft] = useState(1);
-  const [inputRight, setInputRight] = useState(1);
-  const [inputLeftMoneu, setInputLeftMoneu] = useState("RSD");
+  // const [inputRight, setInputRight] = useState(1);
+  const [inputLeftMoneu, setInputLeftMoneu] = useState("USD");
   const [inputRightMoneu, setInputRightMoneu] = useState("EUR");
-  const [result, setResult] = useState(0);
+  const [result, setResult] = useState(inputLeft * USDEUR);
 
-  const data = fetch(
+  fetch(
     "http://www.apilayer.net/api/live?access_key=14b793e6c2439b574e2f1a322dc9fa0c&format=1&currencies=EUR,RSD"
   )
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      setUSDEUR(data.quotes.USDEUR);
-      setUSDRSD(data.quotes.USDRSD);
-    });
-  // console.log(USDEUR);
-  // console.log(USDRSD);
+    .then((data) => console.log(data));
 
+  console.log(inputLeftMoneu);
+  console.log(inputRightMoneu);
+  console.log(inputLeft);
+  console.log(inputLeft * USDEUR);
+  console.log(USDEUR);
   return (
     <div className="converter">
       <h1>CYRRENCY CONVERTOR</h1>
@@ -35,11 +34,12 @@ function App() {
             name="monet"
             className="select"
           >
+            <option value="USD">USD</option>
             <option value="RSD">RSD</option>
             <option value="EUR">EUR</option>
-            <option value="USD">USD</option>
           </select>
           <input
+            value={inputLeft}
             onChange={(e) => {
               setInputLeft(e.target.value);
             }}
