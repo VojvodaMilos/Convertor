@@ -1,27 +1,28 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import img from "./img/arrow.png";
 
 function App() {
-  const [USDEUR, setUSDEUR] = useState(1);
-  const [USDRSD, setUSDRSD] = useState(0);
   const [inputLeft, setInputLeft] = useState(1);
-  const [inputRight, setInputRight] = useState(1);
-  const [inputLeftMoneu, setInputLeftMoneu] = useState("RSD");
-  const [inputRightMoneu, setInputRightMoneu] = useState("EUR");
+  const [inputRight, setInputRight] = useState(null);
+  const [inputLeftMoneu, setInputLeftMoneu] = useState("EUR");
+  const [inputRightMoneu, setInputRightMoneu] = useState("RSD");
   const [result, setResult] = useState(0);
+  const [rsd, setRsd] = useState(null);
+  const [usd, setUsd] = useState(0);
+  const inp1 = useRef();
+  const inp2 = useRef();
 
-  const data = fetch(
-    "http://www.apilayer.net/api/live?access_key=14b793e6c2439b574e2f1a322dc9fa0c&format=1&currencies=EUR,RSD"
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      setUSDEUR(data.quotes.USDEUR);
-      setUSDRSD(data.quotes.USDRSD);
-    });
-  // console.log(USDEUR);
-  // console.log(USDRSD);
+  useEffect(() => {
+    const data = fetch("https://api.exchangerate.host/latest")
+      .then((response) => response.json())
+      .then((data) => {
+        setRsd(data.rates.RSD);
+        setUsd(data.rates.USD);
+      });
+  }, []);
+  // console.log(inputRightMoneu);
+  console.log(inputLeftMoneu);
 
   return (
     <div className="converter">
@@ -31,17 +32,33 @@ function App() {
           <select
             onChange={(e) => {
               setInputLeftMoneu(e.target.value);
+              console.log(e.target.value);
             }}
             name="monet"
             className="select"
           >
-            <option value="RSD">RSD</option>
             <option value="EUR">EUR</option>
+            <option value="RSD">RSD</option>
             <option value="USD">USD</option>
           </select>
           <input
+            ref={inp1}
+            defaultValue={inputLeft}
             onChange={(e) => {
               setInputLeft(e.target.value);
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "RSD") {
+                setInputRight(e.target.value * rsd);
+                inp2.current.value = e.target.value * rsd;
+              }
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "USD") {
+                console.log("radi");
+                setInputLeft(e.target.value * rsd);
+                inp2.current.value = e.target.value * usd;
+              }
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "EUR") {
+                inp2.current.value = e.target.value;
+                console.log("radi");
+              }
             }}
             type="number"
             className="input"
@@ -52,15 +69,36 @@ function App() {
           <select
             onChange={(e) => {
               setInputRightMoneu(e.target.value);
+              console.log(e.target.value);
             }}
             name="monet"
             className="select"
           >
-            <option value="RSD">EUR</option>
             <option value="EUR">RSD</option>
+            <option value="RSD">EUR</option>
             <option value="USD">USD</option>
           </select>
-          <input value={result} type="number" className="input" />
+          <input
+            ref={inp2}
+            defaultValue={inputRightMoneu === "RSD" ? rsd : usd}
+            onChange={(e) => {
+              setInputRight(e.target.value);
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "RSD") {
+                setInputLeft(e.target.value / rsd);
+                inp1.current.value = e.target.value / rsd;
+              }
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "USD") {
+                console.log("radi");
+                setInputLeft(e.target.value / rsd);
+                inp1.current.value = e.target.value / usd;
+              }
+              if (inputLeftMoneu === "EUR" && inputRightMoneu === "EUR") {
+                inp1.current.value = e.target.value;
+              }
+            }}
+            type="number"
+            className="input"
+          />
         </div>
       </div>
       <div className="res">
